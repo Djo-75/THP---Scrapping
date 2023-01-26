@@ -1,39 +1,51 @@
 require 'nokogiri' # comme une balise, équivalent à HTML ou CSS
 require 'open-uri'
 
-# doc = Nokogiri::HTML(URI.open("http://annuaire-des-mairies.com/val-d-oise.html"))     # Scrap villes du 95
-# doc.xpath('//*[contains(@class,"lientxt")]').each do |node|
+puts 
+puts "Voici mes villes stockées dans un array: "
+puts
 
-#     puts node.text
-# end
+def array_keys
 
-# nombre villes = 185 communes
+    array_keys_temp = []
 
-# all_city_names.each do |city_name|
-#     puts city_name.text
+    doc = Nokogiri::HTML(URI.open("http://annuaire-des-mairies.com/val-d-oise.html"))     # Scrap villes du 95
+    raw_keys = doc.xpath('//*[contains(@class,"lientxt")]')                               # Scrapping brut de mes villes
 
-# doc = Nokogiri::HTML(URI.open("http://annuaire-des-mairies.com/val-d-oise.html"))     # Scrap adresses email
+         raw_keys.each do |keys|    # Boucle pour appliquer la même règle à toutes mes datas           
+            
+            keys_list = keys.text   # Je clean la data en retirant les balises et ne gardant que le texte
+            array_keys_temp.push(keys_list) #   Je push les datas dans mon array 
+        
+         end
+    return array_keys_temp
+end
 
-#     nodeset = doc.css('a.lientxt')  # Je récupère ça en brut : <a class="lientxt" href="./95/arnouville-les-gonesse.html">ARNOUVILLE LES GONESSE</a>
-#     all_links = nodeset.map{ |i| i['href'] } # De la ligne du haut, je ne garde que ce qui commence par href
+print array_keys
+puts
+puts
+puts "Nombre de communes dans le 95 :"
+puts array_keys.length
+puts 
+puts
 
-#     updated_links = all_links.map {|x| x[1..-1]} # Je supprime le '.' en créant un nouvel array qui commencera par 1 (mon nouveau "0") et -1 (toujours le dernier char d'une chaine)
+puts
+puts "Voici mes liens stockés dans un array"
+
+def array_link    
+
+    doc = Nokogiri::HTML(URI.open("http://annuaire-des-mairies.com/val-d-oise.html"))     # Scrap adresses email
+
+    nodeset = doc.css('a.lientxt')  # Je récupère ça en brut : <a class="lientxt" href="./95/arnouville-les-gonesse.html">ARNOUVILLE LES GONESSE</a>
+    all_links = nodeset.map{ |i| i['href'] } # De la ligne du haut, je ne garde que ce qui commence par href
+
+    updated_links = all_links.map {|x| x[1..-1]} # Je supprime le '.' en créant un nouvel array qui commencera par 1 (mon nouveau "0") et -1 (toujours le dernier char d'une chaine)
     
-# # puts updated_links
+    return updated_links
+end
 
+print array_link
 
-# doc = Nokogiri::HTML(URI.open("http://annuaire-des-mairies.com/val-d-oise.html"))     # 
-# doc.xpath('/html/body/div/main/section[2]/div/table/tbody/tr[4]/td[2]').each do |node|
-
-    0.upto (updated_links.length -1) do |index|
-
-    
-    link_to_replace = "http://annuaire-des-mairies.com/95/sannois.html"  
-    linkname_changed = link_to_replace.gsub('sannois.html', |index|) # Je sais changer le texte d'un lien et le remplacer*
-    end
-
-
-    puts linkname_changed
-
-    # il va de 0 à nb de villes dans l'array (185)
-#    il doit créer un index
+# faire un array d'emails incluant une boucle de l'espace sur "http://annuaire-des-mairies.com/95/ermont.html" pour récupérer tous les emails 
+# associer le array_keys (villes) avec le array d'emails
+# faire des hashes uniques dans un array
